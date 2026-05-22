@@ -50,14 +50,14 @@ export default function CoachPublicPage() {
       return;
     }
 
-    fetch(`/api/coach-plans/public/coach/${slug}`)
+    fetch(`/api/public/coach/${slug}`)
       .then((r) => {
         if (!r.ok) throw new Error("Coach not found");
         return r.json();
       })
       .then((data) => {
         setCoach(data);
-        return fetch(`/api/coach-plans/public/plans?slug=${slug}`);
+        return fetch(`/api/public/plans?slug=${slug}`);
       })
       .then((r) => r.json())
       .then((data) => setPlans(Array.isArray(data) ? data : []))
@@ -78,7 +78,7 @@ export default function CoachPublicPage() {
   async function onContactSubmit(values: z.infer<typeof contactSchema>) {
     setSubmitting(true);
     try {
-      const res = await fetch("/api/public/subscribe", {
+      const res = await fetch("/api/subscription-requests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -86,9 +86,10 @@ export default function CoachPublicPage() {
           email: values.email,
           phone: values.whatsapp,
           package: "Contact Request",
+          paymentMethod: "custom",
           coachId: coach?.id ?? 1,
           slug: slug || undefined,
-          goals: values.goals,
+          notes: values.goals,
         }),
       });
       if (!res.ok) throw new Error("Submission failed");

@@ -7,8 +7,12 @@ export function middleware(request: NextRequest) {
   
   const parts = host.split(".");
   
-  // Check if there's a subdomain (e.g., johnfitness.trainova.com)
-  // Main domain = trainova.com (2 parts) or www.trainova.com (3 parts with www)
+  // Vercel preview/production domains like project.vercel.app — treat as main site
+  if (host.endsWith(".vercel.app") || host.includes(".vercel.pub")) {
+    return NextResponse.next();
+  }
+  
+  // Main domains: trainova.com (2 parts) or www.trainova.com (3 parts with www)
   const isMainDomain = parts.length <= 2 || parts[0] === "www";
   
   if (!isMainDomain) {
