@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, usersTable, clientsTable } from "@trainova/database";
+import { getDb, usersTable, clientsTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 import { LoginBody } from "@trainova/schemas";
 import { verifyPassword } from "@/lib/server/auth";
@@ -14,14 +14,14 @@ export async function POST(request: NextRequest) {
 
   const { email, password } = parsed.data;
 
-  const [user] = await db.select().from(usersTable).where(eq(usersTable.email, email));
+  const [user] = await getDb().select().from(usersTable).where(eq(usersTable.email, email));
   if (!user || !verifyPassword(password, user.passwordHash)) {
     return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
   }
 
   let clientId = null;
   if (user.role === "client") {
-    const [client] = await db.select().from(clientsTable).where(eq(clientsTable.userId, user.id));
+    const [client] = await getDb().select().from(clientsTable).where(eq(clientsTable.userId, user.id));
     clientId = client?.id ?? null;
   }
 

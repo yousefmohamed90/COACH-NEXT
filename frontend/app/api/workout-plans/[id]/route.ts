@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, workoutPlansTable } from "@trainova/database";
+import { getDb, workoutPlansTable } from "@trainova/database";
 import { eq, and } from "drizzle-orm";
 import { GetWorkoutPlanParams, UpdateWorkoutPlanBody, UpdateWorkoutPlanParams, DeleteWorkoutPlanParams } from "@trainova/schemas";
 import { requireAuth } from "@/lib/server/auth";
@@ -15,7 +15,7 @@ export async function GET(
   const p = GetWorkoutPlanParams.safeParse({ id: parseInt(id, 10) });
   if (!p.success) return NextResponse.json({ error: p.error.message }, { status: 400 });
 
-  const [plan] = await db.select().from(workoutPlansTable).where(
+  const [plan] = await getDb().select().from(workoutPlansTable).where(
     and(eq(workoutPlansTable.id, p.data.id), eq(workoutPlansTable.coachId, session.userId))
   );
   if (!plan) return NextResponse.json({ error: "Workout plan not found" }, { status: 404 });
@@ -37,7 +37,7 @@ export async function PATCH(
   const parsed = UpdateWorkoutPlanBody.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.message }, { status: 400 });
 
-  const [plan] = await db.update(workoutPlansTable)
+  const [plan] = await getDb().update(workoutPlansTable)
     .set(parsed.data)
     .where(and(eq(workoutPlansTable.id, p.data.id), eq(workoutPlansTable.coachId, session.userId)))
     .returning();
@@ -56,7 +56,7 @@ export async function DELETE(
   const p = DeleteWorkoutPlanParams.safeParse({ id: parseInt(id, 10) });
   if (!p.success) return NextResponse.json({ error: p.error.message }, { status: 400 });
 
-  const [deleted] = await db.delete(workoutPlansTable)
+  const [deleted] = await getDb().delete(workoutPlansTable)
     .where(and(eq(workoutPlansTable.id, p.data.id), eq(workoutPlansTable.coachId, session.userId)))
     .returning();
   if (!deleted) return NextResponse.json({ error: "Workout plan not found" }, { status: 404 });

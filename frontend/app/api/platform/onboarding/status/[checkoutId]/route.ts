@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, platformPurchasesTable } from "@trainova/database";
+import { getDb, platformPurchasesTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 
 export async function GET(
@@ -8,7 +8,7 @@ export async function GET(
 ) {
   const { checkoutId } = await params;
 
-  const [purchase] = await db.select()
+  const [purchase] = await getDb().select()
     .from(platformPurchasesTable)
     .where(eq(platformPurchasesTable.polarCheckoutId, checkoutId));
 

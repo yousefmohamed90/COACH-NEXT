@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, checkinsTable } from "@trainova/database";
+import { getDb, checkinsTable } from "@trainova/database";
 import { eq, and } from "drizzle-orm";
 import { GetCheckinParams, UpdateCheckinBody, UpdateCheckinParams, DeleteCheckinParams } from "@trainova/schemas";
 import { requireAuth } from "@/lib/server/auth";
@@ -13,7 +13,7 @@ export async function GET(
   if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   const p = GetCheckinParams.safeParse({ id: parseInt(id, 10) });
   if (!p.success) return NextResponse.json({ error: p.error.message }, { status: 400 });
-  const [checkin] = await db.select().from(checkinsTable).where(
+  const [checkin] = await getDb().select().from(checkinsTable).where(
     and(eq(checkinsTable.id, p.data.id), eq(checkinsTable.coachId, session.userId))
   );
   if (!checkin) return NextResponse.json({ error: "Check-in not found" }, { status: 404 });
@@ -32,7 +32,7 @@ export async function PATCH(
   const body = await request.json().catch(() => ({}));
   const parsed = UpdateCheckinBody.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.message }, { status: 400 });
-  const [checkin] = await db.update(checkinsTable)
+  const [checkin] = await getDb().update(checkinsTable)
     .set(parsed.data)
     .where(and(eq(checkinsTable.id, p.data.id), eq(checkinsTable.coachId, session.userId)))
     .returning();
@@ -49,7 +49,7 @@ export async function DELETE(
   if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   const p = DeleteCheckinParams.safeParse({ id: parseInt(id, 10) });
   if (!p.success) return NextResponse.json({ error: p.error.message }, { status: 400 });
-  const [deleted] = await db.delete(checkinsTable)
+  const [deleted] = await getDb().delete(checkinsTable)
     .where(and(eq(checkinsTable.id, p.data.id), eq(checkinsTable.coachId, session.userId)))
     .returning();
   if (!deleted) return NextResponse.json({ error: "Check-in not found" }, { status: 404 });

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, usersTable } from "@trainova/database";
+import { getDb, usersTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "@/lib/server/auth";
 
@@ -14,7 +14,7 @@ export async function PATCH(request: NextRequest) {
   if (customDomain !== undefined) update.customDomain = customDomain || null;
   if (polarApiKey !== undefined) update.polarApiKey = polarApiKey || null;
   if (slug !== undefined) {
-    const [existingSlug] = await db.select().from(usersTable).where(eq(usersTable.slug, slug));
+    const [existingSlug] = await getDb().select().from(usersTable).where(eq(usersTable.slug, slug));
     if (existingSlug && existingSlug.id !== session.userId) {
       return NextResponse.json({ error: "Slug already taken" }, { status: 400 });
     }
@@ -26,7 +26,7 @@ export async function PATCH(request: NextRequest) {
   if (brandColor !== undefined) update.brandColor = brandColor || null;
   if (socialLinks !== undefined) update.socialLinks = socialLinks ? JSON.stringify(socialLinks) : null;
 
-  const [updated] = await db.update(usersTable).set(update).where(eq(usersTable.id, session.userId)).returning();
+  const [updated] = await getDb().update(usersTable).set(update).where(eq(usersTable.id, session.userId)).returning();
   if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const { polarApiKey: _hidden, passwordHash: _pw, ...safe } = updated;

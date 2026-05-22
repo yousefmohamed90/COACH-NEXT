@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, checkinsTable } from "@trainova/database";
+import { getDb, checkinsTable } from "@trainova/database";
 import { eq, and } from "drizzle-orm";
 import { CreateCheckinBody, ListCheckinsQueryParams } from "@trainova/schemas";
 import { requireAuth } from "@/lib/server/auth";
@@ -15,11 +15,11 @@ export async function GET(request: NextRequest) {
 
   let checkins;
   if (queryParams.data.clientId) {
-    checkins = await db.select().from(checkinsTable).where(
+    checkins = await getDb().select().from(checkinsTable).where(
       and(eq(checkinsTable.coachId, session.userId), eq(checkinsTable.clientId, queryParams.data.clientId))
     );
   } else {
-    checkins = await db.select().from(checkinsTable).where(eq(checkinsTable.coachId, session.userId));
+    checkins = await getDb().select().from(checkinsTable).where(eq(checkinsTable.coachId, session.userId));
   }
   return NextResponse.json(checkins);
 }
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
   const parsed = CreateCheckinBody.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.message }, { status: 400 });
 
-  const [checkin] = await db.insert(checkinsTable).values({
+  const [checkin] = await getDb().insert(checkinsTable).values({
     ...parsed.data, coachId: session.userId,
     workoutCompleted: parsed.data.workoutCompleted ?? false,
     mealsFollowed: parsed.data.mealsFollowed ?? false,

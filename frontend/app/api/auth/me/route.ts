@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, usersTable, clientsTable } from "@trainova/database";
+import { getDb, usersTable, clientsTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 import { getSession } from "@/lib/server/session";
 
@@ -9,14 +9,14 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, session.userId));
+  const [user] = await getDb().select().from(usersTable).where(eq(usersTable.id, session.userId));
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 401 });
   }
 
   let clientId = null;
   if (user.role === "client") {
-    const [client] = await db.select().from(clientsTable).where(eq(clientsTable.userId, user.id));
+    const [client] = await getDb().select().from(clientsTable).where(eq(clientsTable.userId, user.id));
     clientId = client?.id ?? null;
   }
 

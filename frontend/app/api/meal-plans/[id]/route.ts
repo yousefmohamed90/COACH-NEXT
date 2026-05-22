@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, mealPlansTable } from "@trainova/database";
+import { getDb, mealPlansTable } from "@trainova/database";
 import { eq, and } from "drizzle-orm";
 import { GetMealPlanParams, UpdateMealPlanBody, UpdateMealPlanParams, DeleteMealPlanParams } from "@trainova/schemas";
 import { requireAuth } from "@/lib/server/auth";
@@ -13,7 +13,7 @@ export async function GET(
   if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   const p = GetMealPlanParams.safeParse({ id: parseInt(id, 10) });
   if (!p.success) return NextResponse.json({ error: p.error.message }, { status: 400 });
-  const [plan] = await db.select().from(mealPlansTable).where(
+  const [plan] = await getDb().select().from(mealPlansTable).where(
     and(eq(mealPlansTable.id, p.data.id), eq(mealPlansTable.coachId, session.userId))
   );
   if (!plan) return NextResponse.json({ error: "Meal plan not found" }, { status: 404 });
@@ -32,7 +32,7 @@ export async function PATCH(
   const body = await request.json().catch(() => ({}));
   const parsed = UpdateMealPlanBody.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.message }, { status: 400 });
-  const [plan] = await db.update(mealPlansTable)
+  const [plan] = await getDb().update(mealPlansTable)
     .set(parsed.data)
     .where(and(eq(mealPlansTable.id, p.data.id), eq(mealPlansTable.coachId, session.userId)))
     .returning();
@@ -49,7 +49,7 @@ export async function DELETE(
   if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   const p = DeleteMealPlanParams.safeParse({ id: parseInt(id, 10) });
   if (!p.success) return NextResponse.json({ error: p.error.message }, { status: 400 });
-  const [deleted] = await db.delete(mealPlansTable)
+  const [deleted] = await getDb().delete(mealPlansTable)
     .where(and(eq(mealPlansTable.id, p.data.id), eq(mealPlansTable.coachId, session.userId)))
     .returning();
   if (!deleted) return NextResponse.json({ error: "Meal plan not found" }, { status: 404 });

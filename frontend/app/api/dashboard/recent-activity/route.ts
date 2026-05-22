@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, clientsTable, checkinsTable, subscriptionsTable } from "@trainova/database";
+import { getDb, clientsTable, checkinsTable, subscriptionsTable } from "@trainova/database";
 import { eq, sql } from "drizzle-orm";
 import { requireAuth } from "@/lib/server/auth";
 
@@ -8,17 +8,17 @@ export async function GET(request: NextRequest) {
   if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
   const [recentCheckins, recentClients, recentSubs] = await Promise.all([
-    db.select({ id: checkinsTable.id, clientId: checkinsTable.clientId, date: checkinsTable.createdAt, workoutCompleted: checkinsTable.workoutCompleted })
+    getDb().select({ id: checkinsTable.id, clientId: checkinsTable.clientId, date: checkinsTable.createdAt, workoutCompleted: checkinsTable.workoutCompleted })
       .from(checkinsTable)
       .where(eq(checkinsTable.coachId, session.userId))
       .orderBy(sql`${checkinsTable.createdAt} DESC`)
       .limit(5),
-    db.select({ id: clientsTable.id, name: clientsTable.name, createdAt: clientsTable.createdAt })
+    getDb().select({ id: clientsTable.id, name: clientsTable.name, createdAt: clientsTable.createdAt })
       .from(clientsTable)
       .where(eq(clientsTable.coachId, session.userId))
       .orderBy(sql`${clientsTable.createdAt} DESC`)
       .limit(3),
-    db.select({ id: subscriptionsTable.id, clientId: subscriptionsTable.clientId, plan: subscriptionsTable.plan, createdAt: subscriptionsTable.createdAt })
+    getDb().select({ id: subscriptionsTable.id, clientId: subscriptionsTable.clientId, plan: subscriptionsTable.plan, createdAt: subscriptionsTable.createdAt })
       .from(subscriptionsTable)
       .where(eq(subscriptionsTable.coachId, session.userId))
       .orderBy(sql`${subscriptionsTable.createdAt} DESC`)
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
   const allClientIds = [...new Set([...recentCheckins.map(c => c.clientId), ...recentSubs.map(s => s.clientId)])];
 
   if (allClientIds.length > 0) {
-    const clients = await db.select({ id: clientsTable.id, name: clientsTable.name })
+    const clients = await getDb().select({ id: clientsTable.id, name: clientsTable.name })
       .from(clientsTable)
       .where(eq(clientsTable.coachId, session.userId));
     for (const c of clients) clientMap[c.id] = c.name;

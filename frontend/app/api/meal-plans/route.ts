@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, mealPlansTable } from "@trainova/database";
+import { getDb, mealPlansTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 import { CreateMealPlanBody } from "@trainova/schemas";
 import { requireAuth } from "@/lib/server/auth";
@@ -7,7 +7,7 @@ import { requireAuth } from "@/lib/server/auth";
 export async function GET(request: NextRequest) {
   const session = requireAuth(request);
   if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  const plans = await db.select().from(mealPlansTable).where(eq(mealPlansTable.coachId, session.userId));
+  const plans = await getDb().select().from(mealPlansTable).where(eq(mealPlansTable.coachId, session.userId));
   return NextResponse.json(plans);
 }
 
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
   const parsed = CreateMealPlanBody.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.message }, { status: 400 });
 
-  const [plan] = await db.insert(mealPlansTable).values({
+  const [plan] = await getDb().insert(mealPlansTable).values({
     ...parsed.data, coachId: session.userId,
     isTemplate: parsed.data.isTemplate ?? false,
   }).returning();

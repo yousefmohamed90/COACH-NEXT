@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, usersTable } from "@trainova/database";
+import { getDb, usersTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "@/lib/server/auth";
 
 async function isAdmin(userId: number): Promise<boolean> {
-  const [user] = await db.select().from(usersTable).where(eq(usersTable.id, userId));
+  const [user] = await getDb().select().from(usersTable).where(eq(usersTable.id, userId));
   return user?.role === "admin";
 }
 
@@ -29,7 +29,7 @@ export async function PATCH(
   if (!validStatuses.includes(subscriptionStatus))
     return NextResponse.json({ error: `Invalid status. Must be one of: ${validStatuses.join(", ")}` }, { status: 400 });
 
-  const [updated] = await db.update(usersTable)
+  const [updated] = await getDb().update(usersTable)
     .set({ subscriptionStatus })
     .where(eq(usersTable.id, targetId))
     .returning();

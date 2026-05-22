@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, clientsTable, subscriptionsTable, checkinsTable, workoutPlansTable, mealPlansTable } from "@trainova/database";
+import { getDb, clientsTable, subscriptionsTable, checkinsTable, workoutPlansTable, mealPlansTable } from "@trainova/database";
 import { eq, and, gte, sql } from "drizzle-orm";
 import { requireAuth } from "@/lib/server/auth";
 
@@ -8,20 +8,20 @@ export async function GET(request: NextRequest) {
   if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
   const [clients, activeSubs, allSubs, weekCheckins, workoutPlans, mealPlans, recentCheckins] = await Promise.all([
-    db.select().from(clientsTable).where(eq(clientsTable.coachId, session.userId)),
-    db.select().from(subscriptionsTable).where(
+    getDb().select().from(clientsTable).where(eq(clientsTable.coachId, session.userId)),
+    getDb().select().from(subscriptionsTable).where(
       and(eq(subscriptionsTable.coachId, session.userId), eq(subscriptionsTable.status, "active"))
     ),
-    db.select().from(subscriptionsTable).where(
+    getDb().select().from(subscriptionsTable).where(
       and(eq(subscriptionsTable.coachId, session.userId), eq(subscriptionsTable.status, "active"))
     ),
-    db.select().from(checkinsTable).where(
+    getDb().select().from(checkinsTable).where(
       and(eq(checkinsTable.coachId, session.userId),
         gte(checkinsTable.date, new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)))
     ),
-    db.select().from(workoutPlansTable).where(eq(workoutPlansTable.coachId, session.userId)),
-    db.select().from(mealPlansTable).where(eq(mealPlansTable.coachId, session.userId)),
-    db.select().from(checkinsTable).where(eq(checkinsTable.coachId, session.userId)),
+    getDb().select().from(workoutPlansTable).where(eq(workoutPlansTable.coachId, session.userId)),
+    getDb().select().from(mealPlansTable).where(eq(mealPlansTable.coachId, session.userId)),
+    getDb().select().from(checkinsTable).where(eq(checkinsTable.coachId, session.userId)),
   ]);
 
   const monthlyRevenue = activeSubs.reduce((sum, s) => sum + (s.priceMonthly ?? 0), 0);

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, mealPlansTable, checkinsTable } from "@trainova/database";
+import { getDb, mealPlansTable, checkinsTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "@/lib/server/auth";
 
@@ -8,8 +8,8 @@ export async function GET(request: NextRequest) {
   if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
   const [mealPlans, checkins] = await Promise.all([
-    db.select().from(mealPlansTable).where(eq(mealPlansTable.coachId, session.userId)),
-    db.select().from(checkinsTable).where(eq(checkinsTable.coachId, session.userId)),
+    getDb().select().from(mealPlansTable).where(eq(mealPlansTable.coachId, session.userId)),
+    getDb().select().from(checkinsTable).where(eq(checkinsTable.coachId, session.userId)),
   ]);
 
   const plansWithCalories = mealPlans.filter(p => p.targetCalories != null);

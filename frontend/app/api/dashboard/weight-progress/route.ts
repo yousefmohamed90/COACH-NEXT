@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, clientsTable, checkinsTable } from "@trainova/database";
+import { getDb, clientsTable, checkinsTable } from "@trainova/database";
 import { eq, and } from "drizzle-orm";
 import { requireAuth } from "@/lib/server/auth";
 
@@ -12,15 +12,15 @@ export async function GET(request: NextRequest) {
 
   let checkins;
   if (clientId && !isNaN(clientId)) {
-    checkins = await db.select().from(checkinsTable).where(
+    checkins = await getDb().select().from(checkinsTable).where(
       and(eq(checkinsTable.coachId, session.userId), eq(checkinsTable.clientId, clientId))
     );
   } else {
-    checkins = await db.select().from(checkinsTable).where(eq(checkinsTable.coachId, session.userId));
+    checkins = await getDb().select().from(checkinsTable).where(eq(checkinsTable.coachId, session.userId));
   }
 
   const withWeight = checkins.filter(c => c.weightKg != null);
-  const clients = await db.select({ id: clientsTable.id, name: clientsTable.name })
+  const clients = await getDb().select({ id: clientsTable.id, name: clientsTable.name })
     .from(clientsTable).where(eq(clientsTable.coachId, session.userId));
   const clientMap: Record<number, string> = {};
   for (const c of clients) clientMap[c.id] = c.name;

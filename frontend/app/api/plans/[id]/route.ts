@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, coachPlansTable } from "@trainova/database";
+import { getDb, coachPlansTable } from "@trainova/database";
 import { eq, and } from "drizzle-orm";
 import { requireAuth } from "@/lib/server/auth";
 
@@ -25,7 +25,7 @@ export async function PATCH(
   if (polarProductId !== undefined) update.polarProductId = polarProductId || null;
   if (isActive !== undefined) update.isActive = Boolean(isActive);
 
-  const [updated] = await db.update(coachPlansTable)
+  const [updated] = await getDb().update(coachPlansTable)
     .set(update)
     .where(and(eq(coachPlansTable.id, idNum), eq(coachPlansTable.coachId, session.userId)))
     .returning();
@@ -45,7 +45,7 @@ export async function DELETE(
   const idNum = parseInt(id, 10);
   if (isNaN(idNum)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
-  const [deleted] = await db.delete(coachPlansTable)
+  const [deleted] = await getDb().delete(coachPlansTable)
     .where(and(eq(coachPlansTable.id, idNum), eq(coachPlansTable.coachId, session.userId)))
     .returning();
 

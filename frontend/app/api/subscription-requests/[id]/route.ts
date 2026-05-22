@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, subscriptionRequestsTable, usersTable, clientsTable, subscriptionsTable } from "@trainova/database";
+import { getDb, subscriptionRequestsTable, usersTable, clientsTable, subscriptionsTable } from "@trainova/database";
 import { eq, and } from "drizzle-orm";
 import { requireAuth, hashPassword } from "@/lib/server/auth";
 
@@ -22,7 +22,7 @@ export async function PATCH(
   const update: Record<string, unknown> = { status };
   if (typeof notes === "string") update.notes = notes;
 
-  const [updated] = await db.update(subscriptionRequestsTable)
+  const [updated] = await getDb().update(subscriptionRequestsTable)
     .set(update)
     .where(and(eq(subscriptionRequestsTable.id, idNum), eq(subscriptionRequestsTable.coachId, session.userId)))
     .returning();
@@ -35,14 +35,14 @@ export async function PATCH(
     const tempPassword = Math.random().toString(36).slice(2, 10) + "A1!";
     const passwordHash = hashPassword(tempPassword);
 
-    const [user] = await db.insert(usersTable).values({
+    const [user] = await getDb().insert(usersTable).values({
       email: updated.email,
       passwordHash,
       name: updated.name,
       role: "client",
     }).returning();
 
-    const [client] = await db.insert(clientsTable).values({
+    const [client] = await getDb().insert(clientsTable).values({
       coachId: session.userId,
       userId: user.id,
       name: updated.name,
@@ -54,7 +54,7 @@ export async function PATCH(
     const endDate = new Date(now);
     endDate.setMonth(endDate.getMonth() + 3);
 
-    await db.insert(subscriptionsTable).values({
+    await getDb().insert(subscriptionsTable).values({
       clientId: client.id,
       coachId: session.userId,
       plan: updated.package,
@@ -81,7 +81,7 @@ export async function DELETE(
   const idNum = parseInt(id, 10);
   if (isNaN(idNum)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
-  const [deleted] = await db.delete(subscriptionRequestsTable)
+  const [deleted] = await getDb().delete(subscriptionRequestsTable)
     .where(and(eq(subscriptionRequestsTable.id, idNum), eq(subscriptionRequestsTable.coachId, session.userId)))
     .returning();
 

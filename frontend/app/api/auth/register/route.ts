@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, usersTable } from "@trainova/database";
+import { getDb, usersTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 import { RegisterBody } from "@trainova/schemas";
 import { hashPassword } from "@/lib/server/auth";
@@ -14,13 +14,13 @@ export async function POST(request: NextRequest) {
 
   const { email, password, name } = parsed.data;
 
-  const existing = await db.select().from(usersTable).where(eq(usersTable.email, email));
+  const existing = await getDb().select().from(usersTable).where(eq(usersTable.email, email));
   if (existing.length > 0) {
     return NextResponse.json({ error: "Email already registered" }, { status: 400 });
   }
 
   const passwordHash = hashPassword(password);
-  const [user] = await db.insert(usersTable).values({
+  const [user] = await getDb().insert(usersTable).values({
     email, passwordHash, name, role: "coach",
     subscriptionStatus: "inactive",
   }).returning();

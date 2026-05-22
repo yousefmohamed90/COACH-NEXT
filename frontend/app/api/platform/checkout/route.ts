@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, usersTable, platformPurchasesTable } from "@trainova/database";
+import { getDb, usersTable, platformPurchasesTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
 
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     const checkout = await polarRes.json() as { url: string; id: string };
 
-    await db.insert(platformPurchasesTable).values({
+    await getDb().insert(platformPurchasesTable).values({
       coachId: 0,
       polarCheckoutId: checkout.id,
       amount: 200,

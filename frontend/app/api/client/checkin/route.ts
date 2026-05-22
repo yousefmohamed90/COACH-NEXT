@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, clientsTable, checkinsTable } from "@trainova/database";
+import { getDb, clientsTable, checkinsTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 import { requireAuth } from "@/lib/server/auth";
 
@@ -10,10 +10,10 @@ export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => ({}));
   const { weightKg, moodScore, energyLevel, sleepHours, workoutCompleted, mealsFollowed, waterMl, notes } = body;
 
-  const [client] = await db.select().from(clientsTable).where(eq(clientsTable.id, session.clientId));
+  const [client] = await getDb().select().from(clientsTable).where(eq(clientsTable.id, session.clientId));
   if (!client) return NextResponse.json({ error: "Client not found" }, { status: 404 });
 
-  const [checkin] = await db.insert(checkinsTable).values({
+  const [checkin] = await getDb().insert(checkinsTable).values({
     clientId: session.clientId, coachId: client.coachId, date: new Date(),
     weightKg: weightKg ? parseFloat(weightKg) : null,
     moodScore: moodScore ? parseInt(moodScore, 10) : null,

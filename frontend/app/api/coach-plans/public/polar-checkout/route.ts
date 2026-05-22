@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, usersTable, coachPlansTable } from "@trainova/database";
+import { getDb, usersTable, coachPlansTable } from "@trainova/database";
 import { eq, and } from "drizzle-orm";
 
 export async function POST(request: NextRequest) {
@@ -7,12 +7,12 @@ export async function POST(request: NextRequest) {
   const { planId, coachId: rawCoachId, successUrl, customerEmail } = body;
   const coachId = parseInt(String(rawCoachId ?? "1"), 10);
 
-  const [coach] = await db.select().from(usersTable).where(eq(usersTable.id, coachId));
+  const [coach] = await getDb().select().from(usersTable).where(eq(usersTable.id, coachId));
   if (!coach?.polarApiKey) {
     return NextResponse.json({ error: "Coach has not configured Polar payments" }, { status: 400 });
   }
 
-  const [plan] = await db.select().from(coachPlansTable)
+  const [plan] = await getDb().select().from(coachPlansTable)
     .where(and(eq(coachPlansTable.id, parseInt(planId, 10)), eq(coachPlansTable.coachId, coachId)));
   if (!plan?.polarProductId) {
     return NextResponse.json({ error: "Plan is not linked to a Polar product" }, { status: 400 });

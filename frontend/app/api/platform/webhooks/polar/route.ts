@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, usersTable, platformPurchasesTable } from "@trainova/database";
+import { getDb, usersTable, platformPurchasesTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 import crypto from "crypto";
 
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
   if (type === "checkout.completed") {
     const { checkout_id, customer_email, customer_name, metadata } = data;
 
-    const [purchase] = await db.select()
+    const [purchase] = await getDb().select()
       .from(platformPurchasesTable)
       .where(eq(platformPurchasesTable.polarCheckoutId, checkout_id));
 
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Purchase not found" }, { status: 404 });
     }
 
-    const [existingUser] = await db.select()
+    const [existingUser] = await getDb().select()
       .from(usersTable)
       .where(eq(usersTable.email, customer_email));
 
@@ -44,14 +44,14 @@ export async function POST(request: NextRequest) {
 
     if (existingUser) {
       userId = existingUser.id;
-      await db.update(usersTable)
+      await getDb().update(usersTable)
         .set({ subscriptionStatus: "active", polarPurchaseId: checkout_id })
         .where(eq(usersTable.id, userId));
     } else {
       const tempPassword = crypto.randomBytes(16).toString("hex");
       const passwordHash = crypto.createHash("sha256").update(tempPassword).digest("hex");
 
-      const [newUser] = await db.insert(usersTable).values({
+      const [newUser] = await getDb().insert(usersTable).values({
         email: customer_email,
         passwordHash,
         name: customer_name || metadata?.name || "Coach",
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       userId = newUser.id;
     }
 
-    await db.update(platformPurchasesTable)
+    await getDb().update(platformPurchasesTable)
       .set({ coachId: userId, status: "completed" })
       .where(eq(platformPurchasesTable.id, purchase.id));
 

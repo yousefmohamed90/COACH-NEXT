@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, usersTable } from "@trainova/database";
+import { getDb, usersTable } from "@trainova/database";
 import { eq } from "drizzle-orm";
 import { hashPassword } from "@/lib/server/auth";
 
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
-  const [existingSlug] = await db.select().from(usersTable).where(eq(usersTable.slug, slug));
+  const [existingSlug] = await getDb().select().from(usersTable).where(eq(usersTable.slug, slug));
   if (existingSlug) {
     return NextResponse.json({ error: "Slug already taken" }, { status: 400 });
   }
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   if (bio !== undefined) update.bio = bio;
   if (welcomeMessage !== undefined) update.welcomeMessage = welcomeMessage;
 
-  const [updated] = await db.update(usersTable)
+  const [updated] = await getDb().update(usersTable)
     .set(update)
     .where(eq(usersTable.id, coachId))
     .returning();

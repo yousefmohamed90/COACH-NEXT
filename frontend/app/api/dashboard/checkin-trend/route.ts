@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, clientsTable, checkinsTable } from "@trainova/database";
+import { getDb, clientsTable, checkinsTable } from "@trainova/database";
 import { eq, and, gte } from "drizzle-orm";
 import { requireAuth } from "@/lib/server/auth";
 
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-  const checkins = await db.select().from(checkinsTable).where(
+  const checkins = await getDb().select().from(checkinsTable).where(
     and(eq(checkinsTable.coachId, session.userId), gte(checkinsTable.date, thirtyDaysAgo))
   );
 

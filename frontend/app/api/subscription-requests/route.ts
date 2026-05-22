@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, subscriptionRequestsTable, usersTable } from "@trainova/database";
+import { getDb, subscriptionRequestsTable, usersTable } from "@trainova/database";
 import { eq, and, desc } from "drizzle-orm";
 import { requireAuth } from "@/lib/server/auth";
 
@@ -20,14 +20,14 @@ export async function POST(request: NextRequest) {
 
   let resolvedCoachId: number;
   if (slug) {
-    const [coach] = await db.select().from(usersTable).where(eq(usersTable.slug, String(slug)));
+    const [coach] = await getDb().select().from(usersTable).where(eq(usersTable.slug, String(slug)));
     if (!coach) return NextResponse.json({ error: "Coach not found" }, { status: 400 });
     resolvedCoachId = coach.id;
   } else {
     resolvedCoachId = typeof coachId === "number" ? coachId : 1;
   }
 
-  const [request_] = await db.insert(subscriptionRequestsTable).values({
+  const [request_] = await getDb().insert(subscriptionRequestsTable).values({
     name: name.trim(), email: email.trim(), phone: phone.trim(),
     countryCode: typeof countryCode === "string" ? countryCode : "+966",
     package: pkg, paymentMethod, notes: notes ?? null,
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
   const session = requireAuth(request);
   if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
-  const requests = await db.select()
+  const requests = await getDb().select()
     .from(subscriptionRequestsTable)
     .where(eq(subscriptionRequestsTable.coachId, session.userId))
     .orderBy(desc(subscriptionRequestsTable.createdAt));

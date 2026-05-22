@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, coachPlansTable, usersTable } from "@trainova/database";
+import { getDb, coachPlansTable, usersTable } from "@trainova/database";
 import { eq, and } from "drizzle-orm";
 import { requireAuth } from "@/lib/server/auth";
 
 export async function GET(request: NextRequest) {
   const session = requireAuth(request);
   if (!session) return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
-  const plans = await db.select().from(coachPlansTable).where(eq(coachPlansTable.coachId, session.userId));
+  const plans = await getDb().select().from(coachPlansTable).where(eq(coachPlansTable.coachId, session.userId));
   return NextResponse.json(plans);
 }
 
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
   if (isNaN(pr) || pr < 0)
     return NextResponse.json({ error: "Price required" }, { status: 400 });
 
-  const [plan] = await db.insert(coachPlansTable).values({
+  const [plan] = await getDb().insert(coachPlansTable).values({
     coachId: session.userId, name: name.trim(),
     description: description ?? null, durationMonths: dur, price: pr,
     currency: currency ?? "USD", polarProductId: polarProductId ?? null, isActive: true,
