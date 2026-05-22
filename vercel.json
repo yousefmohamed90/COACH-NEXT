@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm install && npm -w @trainova/frontend run build",
+  "outputDirectory": "frontend/.next",
+  "installCommand": "npm install",
+  "framework": "nextjs"
+}

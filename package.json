@@ -1,0 +1,26 @@
+{
+  "name": "workspace",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "frontend/api-client",
+    "packages/*",
+    "scripts"
+  ],
+  "scripts": {
+    "dev": "npm -w @trainova/frontend run dev",
+    "build": "npm -w @trainova/frontend run build",
+    "typecheck": "npm -w @trainova/frontend run typecheck",
+    "dev:frontend": "npm -w @trainova/frontend run dev"
+  },
+  "devDependencies": {
+    "@rollup/rollup-win32-x64-msvc": "^4.60.4",
+    "@tailwindcss/oxide-win32-x64-msvc": "^4.3.0",
+    "cross-env": "^7.0.3",
+    "lightningcss-win32-x64-msvc": "^1.32.0",
+    "prettier": "^3.8.1",
+    "typescript": "~5.9.2"
+  }
+}

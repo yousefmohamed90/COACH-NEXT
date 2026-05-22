@@ -1,0 +1,1515 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: Trainova API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication
+  - name: clients
+    description: Client management
+  - name: workoutPlans
+    description: Workout plans
+  - name: exercises
+    description: Exercises
+  - name: mealPlans
+    description: Meal plans
+  - name: checkins
+    description: Daily check-ins
+  - name: subscriptions
+    description: Subscriptions
+  - name: dashboard
+    description: Dashboard analytics
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  # Auth
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new coach account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginBody"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: OK
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # Clients
+  /clients:
+    get:
+      operationId: listClients
+      tags: [clients]
+      summary: List all clients
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+    post:
+      operationId: createClient
+      tags: [clients]
+      summary: Create a client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateClientBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+
+  /clients/{id}:
+    get:
+      operationId: getClient
+      tags: [clients]
+      summary: Get a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateClient
+      tags: [clients]
+      summary: Update a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClientBody"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+    delete:
+      operationId: deleteClient
+      tags: [clients]
+      summary: Delete a client
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No content
+
+  # Workout Plans
+  /workout-plans:
+    get:
+      operationId: listWorkoutPlans
+      tags: [workoutPlans]
+      summary: List workout plans
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WorkoutPlan"
+    post:
+      operationId: createWorkoutPlan
+      tags: [workoutPlans]
+      summary: Create a workout plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateWorkoutPlanBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkoutPlan"
+
+  /workout-plans/{id}:
+    get:
+      operationId: getWorkoutPlan
+      tags: [workoutPlans]
+      summary: Get a workout plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkoutPlan"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateWorkoutPlan
+      tags: [workoutPlans]
+      summary: Update a workout plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateWorkoutPlanBody"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkoutPlan"
+    delete:
+      operationId: deleteWorkoutPlan
+      tags: [workoutPlans]
+      summary: Delete a workout plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No content
+
+  # Exercises
+  /workout-plans/{planId}/exercises:
+    get:
+      operationId: listExercises
+      tags: [exercises]
+      summary: List exercises for a plan
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Exercise"
+    post:
+      operationId: createExercise
+      tags: [exercises]
+      summary: Create an exercise
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateExerciseBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exercise"
+
+  /exercises/{id}:
+    patch:
+      operationId: updateExercise
+      tags: [exercises]
+      summary: Update an exercise
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateExerciseBody"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Exercise"
+    delete:
+      operationId: deleteExercise
+      tags: [exercises]
+      summary: Delete an exercise
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No content
+
+  # Meal Plans
+  /meal-plans:
+    get:
+      operationId: listMealPlans
+      tags: [mealPlans]
+      summary: List meal plans
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MealPlan"
+    post:
+      operationId: createMealPlan
+      tags: [mealPlans]
+      summary: Create a meal plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMealPlanBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MealPlan"
+
+  /meal-plans/{id}:
+    get:
+      operationId: getMealPlan
+      tags: [mealPlans]
+      summary: Get a meal plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MealPlan"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateMealPlan
+      tags: [mealPlans]
+      summary: Update a meal plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMealPlanBody"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MealPlan"
+    delete:
+      operationId: deleteMealPlan
+      tags: [mealPlans]
+      summary: Delete a meal plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No content
+
+  # Meals
+  /meal-plans/{planId}/meals:
+    get:
+      operationId: listMeals
+      tags: [mealPlans]
+      summary: List meals for a plan
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Meal"
+    post:
+      operationId: createMeal
+      tags: [mealPlans]
+      summary: Create a meal
+      parameters:
+        - name: planId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMealBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Meal"
+
+  /meals/{id}:
+    patch:
+      operationId: updateMeal
+      tags: [mealPlans]
+      summary: Update a meal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMealBody"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Meal"
+    delete:
+      operationId: deleteMeal
+      tags: [mealPlans]
+      summary: Delete a meal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No content
+
+  # Check-ins
+  /checkins:
+    get:
+      operationId: listCheckins
+      tags: [checkins]
+      summary: List check-ins
+      parameters:
+        - name: clientId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Checkin"
+    post:
+      operationId: createCheckin
+      tags: [checkins]
+      summary: Create a check-in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCheckinBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Checkin"
+
+  /checkins/{id}:
+    get:
+      operationId: getCheckin
+      tags: [checkins]
+      summary: Get a check-in
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Checkin"
+    patch:
+      operationId: updateCheckin
+      tags: [checkins]
+      summary: Update a check-in
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCheckinBody"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Checkin"
+    delete:
+      operationId: deleteCheckin
+      tags: [checkins]
+      summary: Delete a check-in
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No content
+
+  # Subscriptions
+  /subscriptions:
+    get:
+      operationId: listSubscriptions
+      tags: [subscriptions]
+      summary: List subscriptions
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Subscription"
+    post:
+      operationId: createSubscription
+      tags: [subscriptions]
+      summary: Create a subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubscriptionBody"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+
+  /subscriptions/{id}:
+    patch:
+      operationId: updateSubscription
+      tags: [subscriptions]
+      summary: Update a subscription
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSubscriptionBody"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Subscription"
+    delete:
+      operationId: deleteSubscription
+      tags: [subscriptions]
+      summary: Delete a subscription
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: No content
+
+  # Dashboard & Analytics (wow endpoints)
+  /dashboard/stats:
+    get:
+      operationId: getDashboardStats
+      tags: [dashboard]
+      summary: Get dashboard summary stats
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /dashboard/recent-activity:
+    get:
+      operationId: getRecentActivity
+      tags: [dashboard]
+      summary: Get recent activity feed
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  /dashboard/weight-progress:
+    get:
+      operationId: getWeightProgress
+      tags: [dashboard]
+      summary: Get weight progress data for charts
+      parameters:
+        - name: clientId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WeightDataPoint"
+
+  /dashboard/nutrition-summary:
+    get:
+      operationId: getNutritionSummary
+      tags: [dashboard]
+      summary: Get nutrition compliance summary
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NutritionSummary"
+
+  /dashboard/checkin-trend:
+    get:
+      operationId: getCheckinTrend
+      tags: [dashboard]
+      summary: Get check-in trend over last 30 days
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CheckinTrendPoint"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - email
+        - name
+        - role
+        - createdAt
+
+    RegisterBody:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+      required:
+        - email
+        - password
+        - name
+
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+      required:
+        - user
+
+    Client:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        weightKg:
+          type: ["number", "null"]
+        heightCm:
+          type: ["number", "null"]
+        goals:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        status:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        coachId:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - email
+        - status
+        - coachId
+        - createdAt
+        - updatedAt
+
+    CreateClientBody:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        weightKg:
+          type: ["number", "null"]
+        heightCm:
+          type: ["number", "null"]
+        goals:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        status:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+      required:
+        - name
+        - email
+
+    UpdateClientBody:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        weightKg:
+          type: ["number", "null"]
+        heightCm:
+          type: ["number", "null"]
+        goals:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        status:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+
+    WorkoutPlan:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        clientId:
+          type: ["integer", "null"]
+        coachId:
+          type: integer
+        durationWeeks:
+          type: ["integer", "null"]
+        isTemplate:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - coachId
+        - isTemplate
+        - createdAt
+        - updatedAt
+
+    CreateWorkoutPlanBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        clientId:
+          type: ["integer", "null"]
+        durationWeeks:
+          type: ["integer", "null"]
+        isTemplate:
+          type: boolean
+      required:
+        - title
+
+    UpdateWorkoutPlanBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        clientId:
+          type: ["integer", "null"]
+        durationWeeks:
+          type: ["integer", "null"]
+        isTemplate:
+          type: boolean
+
+    Exercise:
+      type: object
+      properties:
+        id:
+          type: integer
+        workoutPlanId:
+          type: integer
+        name:
+          type: string
+        sets:
+          type: ["integer", "null"]
+        reps:
+          type: ["integer", "null"]
+        restSeconds:
+          type: ["integer", "null"]
+        notes:
+          type: ["string", "null"]
+        orderIndex:
+          type: integer
+      required:
+        - id
+        - workoutPlanId
+        - name
+        - orderIndex
+
+    CreateExerciseBody:
+      type: object
+      properties:
+        name:
+          type: string
+        sets:
+          type: ["integer", "null"]
+        reps:
+          type: ["integer", "null"]
+        restSeconds:
+          type: ["integer", "null"]
+        notes:
+          type: ["string", "null"]
+        orderIndex:
+          type: integer
+      required:
+        - name
+
+    UpdateExerciseBody:
+      type: object
+      properties:
+        name:
+          type: string
+        sets:
+          type: ["integer", "null"]
+        reps:
+          type: ["integer", "null"]
+        restSeconds:
+          type: ["integer", "null"]
+        notes:
+          type: ["string", "null"]
+        orderIndex:
+          type: integer
+
+    MealPlan:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        clientId:
+          type: ["integer", "null"]
+        coachId:
+          type: integer
+        targetCalories:
+          type: ["integer", "null"]
+        targetProteinG:
+          type: ["integer", "null"]
+        targetCarbsG:
+          type: ["integer", "null"]
+        targetFatG:
+          type: ["integer", "null"]
+        targetWaterMl:
+          type: ["integer", "null"]
+        isTemplate:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - coachId
+        - isTemplate
+        - createdAt
+        - updatedAt
+
+    CreateMealPlanBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        clientId:
+          type: ["integer", "null"]
+        targetCalories:
+          type: ["integer", "null"]
+        targetProteinG:
+          type: ["integer", "null"]
+        targetCarbsG:
+          type: ["integer", "null"]
+        targetFatG:
+          type: ["integer", "null"]
+        targetWaterMl:
+          type: ["integer", "null"]
+        isTemplate:
+          type: boolean
+      required:
+        - title
+
+    UpdateMealPlanBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        clientId:
+          type: ["integer", "null"]
+        targetCalories:
+          type: ["integer", "null"]
+        targetProteinG:
+          type: ["integer", "null"]
+        targetCarbsG:
+          type: ["integer", "null"]
+        targetFatG:
+          type: ["integer", "null"]
+        targetWaterMl:
+          type: ["integer", "null"]
+        isTemplate:
+          type: boolean
+
+    Meal:
+      type: object
+      properties:
+        id:
+          type: integer
+        mealPlanId:
+          type: integer
+        name:
+          type: string
+        mealType:
+          type: string
+        calories:
+          type: ["integer", "null"]
+        proteinG:
+          type: ["integer", "null"]
+        carbsG:
+          type: ["integer", "null"]
+        fatG:
+          type: ["integer", "null"]
+        description:
+          type: ["string", "null"]
+        orderIndex:
+          type: integer
+      required:
+        - id
+        - mealPlanId
+        - name
+        - mealType
+        - orderIndex
+
+    CreateMealBody:
+      type: object
+      properties:
+        name:
+          type: string
+        mealType:
+          type: string
+        calories:
+          type: ["integer", "null"]
+        proteinG:
+          type: ["integer", "null"]
+        carbsG:
+          type: ["integer", "null"]
+        fatG:
+          type: ["integer", "null"]
+        description:
+          type: ["string", "null"]
+        orderIndex:
+          type: integer
+      required:
+        - name
+        - mealType
+
+    UpdateMealBody:
+      type: object
+      properties:
+        name:
+          type: string
+        mealType:
+          type: string
+        calories:
+          type: ["integer", "null"]
+        proteinG:
+          type: ["integer", "null"]
+        carbsG:
+          type: ["integer", "null"]
+        fatG:
+          type: ["integer", "null"]
+        description:
+          type: ["string", "null"]
+        orderIndex:
+          type: integer
+
+    Checkin:
+      type: object
+      properties:
+        id:
+          type: integer
+        clientId:
+          type: integer
+        coachId:
+          type: integer
+        date:
+          type: string
+          format: date-time
+        weightKg:
+          type: ["number", "null"]
+        energyLevel:
+          type: ["integer", "null"]
+        moodScore:
+          type: ["integer", "null"]
+        sleepHours:
+          type: ["number", "null"]
+        workoutCompleted:
+          type: boolean
+        mealsFollowed:
+          type: boolean
+        waterMl:
+          type: ["integer", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - clientId
+        - coachId
+        - date
+        - workoutCompleted
+        - mealsFollowed
+        - createdAt
+
+    CreateCheckinBody:
+      type: object
+      properties:
+        clientId:
+          type: integer
+        date:
+          type: string
+          format: date-time
+        weightKg:
+          type: ["number", "null"]
+        energyLevel:
+          type: ["integer", "null"]
+        moodScore:
+          type: ["integer", "null"]
+        sleepHours:
+          type: ["number", "null"]
+        workoutCompleted:
+          type: boolean
+        mealsFollowed:
+          type: boolean
+        waterMl:
+          type: ["integer", "null"]
+        notes:
+          type: ["string", "null"]
+      required:
+        - clientId
+        - date
+
+    UpdateCheckinBody:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+        weightKg:
+          type: ["number", "null"]
+        energyLevel:
+          type: ["integer", "null"]
+        moodScore:
+          type: ["integer", "null"]
+        sleepHours:
+          type: ["number", "null"]
+        workoutCompleted:
+          type: boolean
+        mealsFollowed:
+          type: boolean
+        waterMl:
+          type: ["integer", "null"]
+        notes:
+          type: ["string", "null"]
+
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: integer
+        clientId:
+          type: integer
+        coachId:
+          type: integer
+        plan:
+          type: string
+        priceMonthly:
+          type: number
+        status:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: ["string", "null"]
+          format: date-time
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - clientId
+        - coachId
+        - plan
+        - priceMonthly
+        - status
+        - startDate
+        - createdAt
+
+    CreateSubscriptionBody:
+      type: object
+      properties:
+        clientId:
+          type: integer
+        plan:
+          type: string
+        priceMonthly:
+          type: number
+        status:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: ["string", "null"]
+          format: date-time
+        notes:
+          type: ["string", "null"]
+      required:
+        - clientId
+        - plan
+        - priceMonthly
+        - startDate
+
+    UpdateSubscriptionBody:
+      type: object
+      properties:
+        plan:
+          type: string
+        priceMonthly:
+          type: number
+        status:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: ["string", "null"]
+          format: date-time
+        notes:
+          type: ["string", "null"]
+
+    DashboardStats:
+      type: object
+      properties:
+        totalClients:
+          type: integer
+        activeSubscriptions:
+          type: integer
+        monthlyRevenue:
+          type: number
+        checkinsThisWeek:
+          type: integer
+        workoutPlansCount:
+          type: integer
+        mealPlansCount:
+          type: integer
+        avgClientMoodScore:
+          type: ["number", "null"]
+        nutritionComplianceRate:
+          type: number
+      required:
+        - totalClients
+        - activeSubscriptions
+        - monthlyRevenue
+        - checkinsThisWeek
+        - workoutPlansCount
+        - mealPlansCount
+        - nutritionComplianceRate
+
+    ActivityItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        description:
+          type: string
+        clientName:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - type
+        - description
+        - createdAt
+
+    WeightDataPoint:
+      type: object
+      properties:
+        date:
+          type: string
+        weightKg:
+          type: number
+        clientName:
+          type: string
+      required:
+        - date
+        - weightKg
+        - clientName
+
+    NutritionSummary:
+      type: object
+      properties:
+        totalMealPlans:
+          type: integer
+        avgCaloriesTarget:
+          type: ["number", "null"]
+        avgProteinTarget:
+          type: ["number", "null"]
+        complianceRate:
+          type: number
+        topGoals:
+          type: array
+          items:
+            type: string
+      required:
+        - totalMealPlans
+        - complianceRate
+        - topGoals
+
+    CheckinTrendPoint:
+      type: object
+      properties:
+        date:
+          type: string
+        count:
+          type: integer
+        avgMood:
+          type: ["number", "null"]
+        avgEnergy:
+          type: ["number", "null"]
+      required:
+        - date
+        - count
