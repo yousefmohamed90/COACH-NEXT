@@ -59,3 +59,5 @@ frontend/.next/
 .env.development
 frontend/.env
 packages/database/.env
+
+.vercel

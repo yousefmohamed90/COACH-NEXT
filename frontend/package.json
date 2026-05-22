@@ -49,7 +49,6 @@
     "@replit/vite-plugin-cartographer": "^0.5.1",
     "@replit/vite-plugin-dev-banner": "^0.1.1",
     "@replit/vite-plugin-runtime-error-modal": "^0.0.6",
-    "@rollup/rollup-win32-x64-msvc": "^4.60.4",
     "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/vite": "^4.1.14",
     "@tanstack/react-query": "^5.90.21",
@@ -82,5 +81,8 @@
     "vite": "^7.3.2",
     "wouter": "^3.3.5",
     "zod": "^3.25.76"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-win32-x64-msvc": "^4.60.4"
   }
 }
