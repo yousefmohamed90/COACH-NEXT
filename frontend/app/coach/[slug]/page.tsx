@@ -122,13 +122,13 @@ export default function CoachPublicPage() {
 
   if (coachLoading || plansLoading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 space-y-4">
-        <Skeleton className="h-16 w-16 rounded-full" />
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-4 w-96" />
+      <div className="min-h-screen bg-gradient-to-br from-[#6d28d9] via-[#1e3a8a] to-[#0f766e] dark:from-[#4a1d96] dark:via-[#1e2a5e] dark:to-[#0a4d44] flex flex-col items-center justify-center p-6 space-y-4">
+        <Skeleton className="h-16 w-16 rounded-full bg-white/20" />
+        <Skeleton className="h-8 w-48 bg-white/20" />
+        <Skeleton className="h-4 w-96 bg-white/20" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mt-8">
-          <Skeleton className="h-80 w-full" />
-          <Skeleton className="h-80 w-full" />
+          <Skeleton className="h-80 w-full bg-white/10" />
+          <Skeleton className="h-80 w-full bg-white/10" />
         </div>
       </div>
     );
@@ -136,15 +136,15 @@ export default function CoachPublicPage() {
 
   if (error || !coach) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-16 h-16 bg-destructive/10 text-destructive flex items-center justify-center rounded-none mb-4">
+      <div className="min-h-screen bg-gradient-to-br from-[#6d28d9] via-[#1e3a8a] to-[#0f766e] dark:from-[#4a1d96] dark:via-[#1e2a5e] dark:to-[#0a4d44] flex flex-col items-center justify-center p-6 text-center">
+        <div className="w-16 h-16 bg-white/10 text-white flex items-center justify-center rounded-none mb-4">
           <Info className="h-8 w-8" />
         </div>
-        <h1 className="text-2xl font-bold tracking-tight mb-2">Profile Not Found</h1>
-        <p className="text-muted-foreground max-w-sm mb-6">
+        <h1 className="text-2xl font-bold tracking-tight text-white mb-2">Profile Not Found</h1>
+        <p className="text-white/70 max-w-sm mb-6">
           {error || "The coach profile you are looking for does not exist or has been deactivated."}
         </p>
-        <Button onClick={() => router.push("/")}>Go to Home</Button>
+        <Button onClick={() => router.push("/")} className="bg-white text-[#6d28d9] hover:bg-cyan-300 hover:text-black">Go to Home</Button>
       </div>
     );
   }
@@ -208,69 +208,71 @@ export default function CoachPublicPage() {
 
       {/* About Section */}
       {coach.bio && (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl font-bold tracking-tight uppercase">About</h2>
-            <div className="w-12 h-1 bg-primary mx-auto mt-4" />
-          </div>
-          <div className="border border-border bg-card p-8">
-            <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-              {coach.bio}
-            </p>
+        <div className="bg-gradient-to-b from-[#1a0a2e] to-[#162447] dark:from-[#0d0d1a] dark:to-[#111827] px-4 sm:px-6 py-12 sm:py-20">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-10">
+              <h2 className="text-2xl font-bold tracking-tight uppercase text-white">About</h2>
+              <div className="w-12 h-1 bg-cyan-400 mx-auto mt-4" />
+            </div>
+            <div className="border border-white/10 bg-white/5 backdrop-blur-sm p-8">
+              <p className="text-white/70 leading-relaxed whitespace-pre-line">
+                {coach.bio}
+              </p>
+            </div>
           </div>
         </div>
       )}
 
       {/* Plans Section */}
-      <div id="plans-section" className="border-t border-border bg-card/25 py-12 sm:py-20 px-4 sm:px-6">
+      <div id="plans-section" className="bg-gradient-to-b from-[#162447] to-[#1a0a2e] dark:from-[#111827] dark:to-[#0d0d1a] py-12 sm:py-20 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold tracking-tight uppercase">Coaching Packages</h2>
-            <p className="text-muted-foreground mt-1">Choose the transformation plan that fits your goals</p>
+            <h2 className="text-2xl font-bold tracking-tight uppercase text-white">Coaching Packages</h2>
+            <p className="text-white/60 mt-1">Choose the transformation plan that fits your goals</p>
           </div>
 
           {plans.length === 0 ? (
-            <div className="border border-border p-12 text-center text-muted-foreground">
+            <div className="border border-white/10 bg-white/5 p-12 text-center text-white/50">
               No active coaching plans available right now. Please check back later!
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {plans.map((plan) => (
-                <Card key={plan.id} className="relative flex flex-col border border-border bg-card rounded-none hover:border-primary/50 transition-all">
+                <Card key={plan.id} className="relative flex flex-col border border-white/10 bg-white/5 backdrop-blur-sm rounded-none hover:border-cyan-400/50 transition-all">
                   <CardHeader className="pb-4">
-                    <CardTitle className="text-xl font-bold tracking-tight uppercase">{plan.name}</CardTitle>
-                    <CardDescription className="line-clamp-3 min-h-[4.5rem] mt-2 text-sm leading-relaxed">
+                    <CardTitle className="text-xl font-bold tracking-tight uppercase text-white">{plan.name}</CardTitle>
+                    <CardDescription className="line-clamp-3 min-h-[4.5rem] mt-2 text-sm leading-relaxed text-white/60">
                       {plan.description || "Get customized guidance, check-ins, and direct access."}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col pt-0">
                     <div className="my-6">
-                      <span className="text-4xl font-extrabold tracking-tight">
+                      <span className="text-4xl font-extrabold tracking-tight text-white">
                         {plan.currency} {plan.price.toFixed(0)}
                       </span>
-                      <span className="text-muted-foreground text-sm ml-2">
+                      <span className="text-white/50 text-sm ml-2">
                         / {plan.durationMonths === 1 ? "month" : `${plan.durationMonths} mos`}
                       </span>
                     </div>
 
                     <div className="space-y-3 mb-8 text-sm flex-1">
                       <div className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                        <span>Custom Workout & Nutrition Plans</span>
+                        <Check className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
+                        <span className="text-white/70">Custom Workout & Nutrition Plans</span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                        <span>Weekly Check-ins & Progress Analytics</span>
+                        <Check className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
+                        <span className="text-white/70">Weekly Check-ins & Progress Analytics</span>
                       </div>
                       <div className="flex items-start gap-2">
-                        <Calendar className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                        <span>{plan.durationMonths} Month Duration</span>
+                        <Calendar className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
+                        <span className="text-white/70">{plan.durationMonths} Month Duration</span>
                       </div>
                     </div>
 
                     <Button
                       onClick={() => router.push(`/coach/${slug}/subscribe?planId=${plan.id}`)}
-                      className="w-full h-11 text-sm font-bold uppercase tracking-wider rounded-none"
+                      className="w-full h-11 text-sm font-bold uppercase tracking-wider rounded-none bg-cyan-400 text-black hover:bg-cyan-300"
                     >
                       Subscribe
                     </Button>
@@ -283,93 +285,95 @@ export default function CoachPublicPage() {
       </div>
 
       {/* Contact Section */}
-      <div id="contact-section" className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl font-bold tracking-tight uppercase">Get Started</h2>
-          <p className="text-muted-foreground mt-1">Send us your details and we&apos;ll get back to you</p>
-          <div className="w-12 h-1 bg-primary mx-auto mt-4" />
-        </div>
+      <div id="contact-section" className="bg-gradient-to-b from-[#1a0a2e] to-[#0f0518] dark:from-[#0d0d1a] dark:to-[#09090b] px-4 sm:px-6 py-12 sm:py-20">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl font-bold tracking-tight uppercase text-white">Get Started</h2>
+            <p className="text-white/60 mt-1">Send us your details and we&apos;ll get back to you</p>
+            <div className="w-12 h-1 bg-cyan-400 mx-auto mt-4" />
+          </div>
 
-        <div className="border border-border bg-card">
-          <div className="h-1 bg-primary w-full" />
-          <div className="p-8">
-            <form onSubmit={contactForm.handleSubmit(onContactSubmit)} className="space-y-5">
-              <div>
-                <label className="text-xs uppercase tracking-wider font-semibold mb-2 block">
-                  Full Name <span className="text-primary">*</span>
-                </label>
-                <Input
-                  placeholder="Your full name"
-                  className="h-11 bg-background"
-                  {...contactForm.register("name")}
-                />
-                {contactForm.formState.errors.name && (
-                  <p className="text-sm text-destructive mt-1">{contactForm.formState.errors.name.message}</p>
-                )}
-              </div>
+          <div className="border border-white/10 bg-white/5 backdrop-blur-sm">
+            <div className="h-1 bg-cyan-400 w-full" />
+            <div className="p-8">
+              <form onSubmit={contactForm.handleSubmit(onContactSubmit)} className="space-y-5">
+                <div>
+                  <label className="text-xs uppercase tracking-wider font-semibold mb-2 block text-white/80">
+                    Full Name <span className="text-cyan-400">*</span>
+                  </label>
+                  <Input
+                    placeholder="Your full name"
+                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/40"
+                    {...contactForm.register("name")}
+                  />
+                  {contactForm.formState.errors.name && (
+                    <p className="text-sm text-red-400 mt-1">{contactForm.formState.errors.name.message}</p>
+                  )}
+                </div>
 
-              <div>
-                <label className="text-xs uppercase tracking-wider font-semibold mb-2 block">
-                  Email <span className="text-primary">*</span>
-                </label>
-                <Input
-                  type="email"
-                  placeholder="your@email.com"
-                  className="h-11 bg-background"
-                  {...contactForm.register("email")}
-                />
-                {contactForm.formState.errors.email && (
-                  <p className="text-sm text-destructive mt-1">{contactForm.formState.errors.email.message}</p>
-                )}
-              </div>
+                <div>
+                  <label className="text-xs uppercase tracking-wider font-semibold mb-2 block text-white/80">
+                    Email <span className="text-cyan-400">*</span>
+                  </label>
+                  <Input
+                    type="email"
+                    placeholder="your@email.com"
+                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/40"
+                    {...contactForm.register("email")}
+                  />
+                  {contactForm.formState.errors.email && (
+                    <p className="text-sm text-red-400 mt-1">{contactForm.formState.errors.email.message}</p>
+                  )}
+                </div>
 
-              <div>
-                <label className="text-xs uppercase tracking-wider font-semibold mb-2 block">
-                  WhatsApp <span className="text-primary">*</span>
-                </label>
-                <Input
-                  placeholder="+966 5xxxxxxxx"
-                  className="h-11 bg-background"
-                  {...contactForm.register("whatsapp")}
-                />
-                {contactForm.formState.errors.whatsapp && (
-                  <p className="text-sm text-destructive mt-1">{contactForm.formState.errors.whatsapp.message}</p>
-                )}
-              </div>
+                <div>
+                  <label className="text-xs uppercase tracking-wider font-semibold mb-2 block text-white/80">
+                    WhatsApp <span className="text-cyan-400">*</span>
+                  </label>
+                  <Input
+                    placeholder="+966 5xxxxxxxx"
+                    className="h-11 bg-white/10 border-white/20 text-white placeholder:text-white/40"
+                    {...contactForm.register("whatsapp")}
+                  />
+                  {contactForm.formState.errors.whatsapp && (
+                    <p className="text-sm text-red-400 mt-1">{contactForm.formState.errors.whatsapp.message}</p>
+                  )}
+                </div>
 
-              <div>
-                <label className="text-xs uppercase tracking-wider font-semibold mb-2 block">
-                  Goals <span className="text-primary">*</span>
-                </label>
-                <Textarea
-                  placeholder="Tell us about your fitness goals, experience level, and what you're looking for..."
-                  className="min-h-[120px] bg-background"
-                  {...contactForm.register("goals")}
-                />
-                {contactForm.formState.errors.goals && (
-                  <p className="text-sm text-destructive mt-1">{contactForm.formState.errors.goals.message}</p>
-                )}
-              </div>
+                <div>
+                  <label className="text-xs uppercase tracking-wider font-semibold mb-2 block text-white/80">
+                    Goals <span className="text-cyan-400">*</span>
+                  </label>
+                  <Textarea
+                    placeholder="Tell us about your fitness goals, experience level, and what you're looking for..."
+                    className="min-h-[120px] bg-white/10 border-white/20 text-white placeholder:text-white/40"
+                    {...contactForm.register("goals")}
+                  />
+                  {contactForm.formState.errors.goals && (
+                    <p className="text-sm text-red-400 mt-1">{contactForm.formState.errors.goals.message}</p>
+                  )}
+                </div>
 
-              <Button
-                type="submit"
-                className="w-full h-12 text-base font-semibold tracking-wide"
-                disabled={submitting}
-              >
-                {submitting ? "Sending..." : (
-                  <>
-                    <Send className="mr-2 h-4 w-4" />
-                    Send Request
-                  </>
-                )}
-              </Button>
-            </form>
+                <Button
+                  type="submit"
+                  className="w-full h-12 text-base font-semibold tracking-wide bg-cyan-400 text-black hover:bg-cyan-300"
+                  disabled={submitting}
+                >
+                  {submitting ? "Sending..." : (
+                    <>
+                      <Send className="mr-2 h-4 w-4" />
+                      Send Request
+                    </>
+                  )}
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="border-t border-border py-6 sm:py-8 text-center text-xs text-muted-foreground bg-card/25">
+      <div className="bg-[#0f0518] dark:bg-[#09090b] border-t border-white/10 py-6 sm:py-8 text-center text-xs text-white/40">
         <p>&copy; {new Date().getFullYear()} {coach.name}. Powered by TRAINOVA</p>
       </div>
     </div>
