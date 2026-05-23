@@ -154,16 +154,22 @@ export default function CoachPublicPage() {
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-[#6d28d9] via-[#1e3a8a] to-[#0f766e] dark:from-[#4a1d96] dark:via-[#1e2a5e] dark:to-[#0a4d44] text-white py-16 sm:py-24 px-4 sm:px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_left,_white,_transparent_35%)]" />
+        <div className="absolute top-10 right-10 w-64 h-64 bg-cyan-400/10 blur-3xl rounded-full pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-64 h-64 bg-purple-400/10 blur-3xl rounded-full pointer-events-none" />
         <div className="max-w-3xl mx-auto flex flex-col items-center text-center relative z-10">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tighter uppercase">
+          <div className="w-14 h-14 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mb-6">
+            <span className="text-2xl font-black text-cyan-300">{coach.name?.charAt(0)?.toUpperCase() || "C"}</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">
             {coach.name}
           </h1>
-          <p className="text-white/80 mt-4 max-w-2xl text-base sm:text-lg leading-relaxed">
+          <div className="w-12 h-0.5 bg-cyan-400 rounded-full mt-4" />
+          <p className="text-white/80 mt-5 max-w-2xl text-base sm:text-lg leading-relaxed">
             {coach.welcomeMessage || coach.bio || "Welcome to my customized online coaching platform. Select a plan below to start your transformation today."}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 mt-8 w-full sm:w-auto max-w-xs sm:max-w-none mx-auto">
             <Button
-              className="h-12 px-8 text-sm font-bold uppercase tracking-wider bg-white text-[#6d28d9] hover:bg-cyan-300 hover:text-black w-full sm:w-auto"
+              className="h-12 px-8 text-sm font-bold uppercase tracking-wider bg-white text-[#6d28d9] hover:bg-cyan-300 hover:text-black w-full sm:w-auto shadow-lg"
               onClick={() => {
                 document.getElementById("plans-section")?.scrollIntoView({ behavior: "smooth" });
               }}
@@ -370,10 +376,6 @@ export default function CoachPublicPage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="bg-[#0f0518] dark:bg-[#09090b] border-t border-white/10 py-6 text-center text-xs text-white/40">
-        <p>&copy; {new Date().getFullYear()} {coach.name}. Powered by TRAINOVA</p>
-      </div>
     </div>
   );
 }

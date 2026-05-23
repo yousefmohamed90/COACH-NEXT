@@ -41,8 +41,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-background flex">
+        <div className="hidden md:flex w-64 border-r border-border bg-sidebar p-4 flex-col gap-4">
+          <div className="h-8 w-24 bg-muted rounded animate-pulse" />
+          <div className="space-y-2 flex-1">
+            {[...Array(6)].map((_, i) => <div key={i} className="h-10 bg-muted rounded animate-pulse" />)}
+          </div>
+        </div>
+        <main className="flex-1 p-6">
+          <div className="space-y-4">
+            <div className="h-8 w-48 bg-muted rounded animate-pulse" />
+            <div className="h-4 w-64 bg-muted rounded animate-pulse" />
+            <div className="grid grid-cols-5 gap-4 mt-6">
+              {[...Array(5)].map((_, i) => <div key={i} className="h-24 bg-muted rounded animate-pulse" />)}
+            </div>
+          </div>
+        </main>
       </div>
     )
   }
