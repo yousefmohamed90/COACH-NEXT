@@ -10,25 +10,58 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 const schema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 export default function Register() {
   const router = useRouter();
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: { name: "", email: "" },
+    defaultValues: { name: "", email: "", password: "" },
   });
 
-  async function onSubmit(values: z.infer<typeof schema>) {
-    setLoading(true);
+  async function startFreeTrial(values: z.infer<typeof schema>) {
+    setLoading("trial");
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          password: values.password,
+          trial: true,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Registration failed");
+      }
+
+      const data = await res.json();
+      router.push(`/onboarding?trial=true&coachId=${data.user.id}`);
+    } catch (err) {
+      toast({
+        title: "Registration failed",
+        description: err instanceof Error ? err.message : "Something went wrong",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(null);
+    }
+  }
+
+  async function buyFullAccess(values: z.infer<typeof schema>) {
+    setLoading("buy");
     try {
       const res = await fetch("/api/platform/checkout", {
         method: "POST",
@@ -50,13 +83,13 @@ export default function Register() {
         window.location.href = data.checkoutUrl;
       }
     } catch (err) {
-      toast({ 
-        title: "Checkout failed", 
-        description: err instanceof Error ? err.message : "Something went wrong", 
-        variant: "destructive" 
+      toast({
+        title: "Checkout failed",
+        description: err instanceof Error ? err.message : "Something went wrong",
+        variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      setLoading(null);
     }
   }
 
@@ -69,16 +102,11 @@ export default function Register() {
         </div>
 
         <div className="bg-white/10 backdrop-blur-md border border-white/20 p-8 rounded-2xl">
-          <div className="mb-6 p-4 bg-white/10 border border-cyan-300/30 rounded-xl">
-            <p className="text-sm font-semibold text-cyan-300 mb-1">$200 One-Time Payment</p>
-            <p className="text-xs text-white/60">Lifetime access • No monthly fees</p>
-          </div>
-
-          <h2 className="text-xl font-bold text-white mb-1">Start Your Setup</h2>
-          <p className="text-sm text-white/70 mb-6">Enter your details to begin the checkout process</p>
+          <h2 className="text-xl font-bold text-white mb-1">Create Your Account</h2>
+          <p className="text-sm text-white/70 mb-6">Start your 15-day free trial or buy full access</p>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form className="space-y-4">
               <FormField
                 control={form.control}
                 name="name"
@@ -105,10 +133,53 @@ export default function Register() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full bg-white text-primary hover:bg-cyan-300 hover:text-black font-bold" disabled={loading}>
-                {loading ? "Processing..." : (
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs uppercase tracking-wider text-cyan-300">Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="Min 6 characters" className="bg-white/10 border-white/20 text-white placeholder:text-white/40" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                type="button"
+                onClick={form.handleSubmit(startFreeTrial)}
+                className="w-full bg-cyan-400 hover:bg-cyan-300 text-black font-bold"
+                disabled={loading !== null}
+              >
+                {loading === "trial" ? "Creating account..." : (
                   <>
-                    Continue to Checkout
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Start 15-Day Free Trial
+                  </>
+                )}
+              </Button>
+
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-white/20" />
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="bg-[#1e3a8a] px-2 text-white/60">or</span>
+                </div>
+              </div>
+
+              <Button
+                type="button"
+                onClick={form.handleSubmit(buyFullAccess)}
+                variant="outline"
+                className="w-full border-white/30 text-white hover:bg-white/10 font-semibold"
+                disabled={loading !== null}
+              >
+                {loading === "buy" ? "Processing..." : (
+                  <>
+                    Buy Full Access — $200
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </>
                 )}

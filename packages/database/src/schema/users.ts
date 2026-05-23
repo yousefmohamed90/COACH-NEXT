@@ -17,6 +17,7 @@ export const usersTable = pgTable("users", {
   brandColor: text("brand_color"),
   socialLinks: text("social_links"),
   subscriptionStatus: text("subscription_status").default("inactive"),
+  trialEndsAt: timestamp("trial_ends_at", { withTimezone: true }),
   polarPurchaseId: text("polar_purchase_id"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow().$onUpdate(() => new Date()),

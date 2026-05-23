@@ -14,67 +14,58 @@ export default function CoachingPlatformDesign() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5] dark:bg-[#0a0a12] flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-7xl rounded-2xl sm:rounded-[32px] overflow-hidden shadow-2xl bg-white dark:bg-card grid grid-cols-1 lg:grid-cols-2">
+    <div className="min-h-screen bg-[#f5f5f5] dark:bg-[#0a0a12] flex items-center justify-center p-3 sm:p-4">
+      <div className="w-full max-w-6xl rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl bg-white dark:bg-card grid grid-cols-1 lg:grid-cols-2">
         {/* Left Section */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#6d28d9] via-[#1e3a8a] to-[#0f766e] dark:from-[#4a1d96] dark:via-[#1e2a5e] dark:to-[#0a4d44] text-white p-8 sm:p-10 lg:p-16 flex flex-col justify-between">
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#6d28d9] via-[#1e3a8a] to-[#0f766e] dark:from-[#4a1d96] dark:via-[#1e2a5e] dark:to-[#0a4d44] text-white p-5 sm:p-8 lg:p-10 flex flex-col justify-between">
           <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_left,_white,_transparent_35%)]" />
 
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-cyan-400/30 bg-black/20 backdrop-blur-md text-cyan-300 text-xs sm:text-sm font-semibold tracking-wide">
-              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-300" />
-              ONE-TIME PAYMENT
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-cyan-400/30 bg-black/20 backdrop-blur-md text-cyan-300 text-[10px] sm:text-xs font-semibold tracking-wide">
+              <span className="w-1.5 h-1.5 rounded-full bg-cyan-300" />
+              15-DAY FREE TRIAL
             </div>
 
-            <div className="mt-8 sm:mt-10 space-y-4 sm:space-y-6">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
+            <div className="mt-4 sm:mt-5 space-y-2 sm:space-y-3">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight">
                 Your all-in-one <br />
                 <span className="text-cyan-300">coaching platform</span>
               </h1>
 
-              <p className="text-base sm:text-lg text-white/80 max-w-xl leading-relaxed">
+              <p className="text-xs sm:text-sm text-white/80 max-w-xl leading-relaxed">
                 Manage clients, build programs, deliver nutrition plans
                 and grow your coaching business.
               </p>
             </div>
 
-            <div className="mt-10 sm:mt-12">
-              <h2 className="text-5xl sm:text-7xl font-black tracking-tight">$200</h2>
-              <p className="mt-2 sm:mt-3 text-cyan-300 text-base sm:text-lg font-medium">
+            <button
+              onClick={() => router.push("/register")}
+              className="mt-4 sm:mt-5 w-full max-w-sm bg-cyan-400 text-black hover:bg-cyan-300 transition-all duration-300 font-bold text-sm sm:text-base py-3 sm:py-3.5 rounded-lg sm:rounded-xl shadow-lg hover:scale-[1.02] cursor-pointer"
+            >
+              START FREE TRIAL →
+            </button>
+
+            <div className="mt-3 sm:mt-4">
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight">$200</h2>
+              <p className="text-cyan-300 text-xs sm:text-sm font-medium">
                 One-time payment. No monthly fees.
               </p>
             </div>
 
-            <div className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 max-w-xl">
-              <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md p-4 sm:p-5 flex gap-3 sm:gap-4 items-start">
-                <div className="text-xl sm:text-2xl shrink-0">🛡️</div>
-                <div>
-                  <h3 className="font-bold text-sm sm:text-base">No Monthly Fees</h3>
-                  <p className="text-xs sm:text-sm text-white/70 mt-1">Pay once, own forever</p>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/10 backdrop-blur-md p-4 sm:p-5 flex gap-3 sm:gap-4 items-start">
-                <div className="text-xl sm:text-2xl shrink-0">⚡</div>
-                <div>
-                  <h3 className="font-bold text-sm sm:text-base">Launch in Minutes</h3>
-                  <p className="text-xs sm:text-sm text-white/70 mt-1">Get started instantly</p>
-                </div>
-              </div>
-            </div>
-
             <button
               onClick={() => router.push("/register")}
-              className="mt-8 sm:mt-10 w-full max-w-md bg-white text-black hover:bg-cyan-300 hover:text-black transition-all duration-300 font-bold text-base sm:text-lg py-4 sm:py-5 rounded-xl sm:rounded-2xl shadow-xl hover:scale-[1.02] cursor-pointer"
+              className="mt-2 w-full max-w-sm border border-white/30 text-white hover:bg-white/10 transition-all duration-300 font-semibold text-xs sm:text-sm py-2 sm:py-2.5 rounded-lg sm:rounded-xl cursor-pointer"
             >
-              LAUNCH YOUR COACH SITE →
+              Buy Full Access — $200
             </button>
           </div>
 
-          <div className="relative z-10 mt-10 sm:mt-12 flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm text-white/70">
-            <span>✓ Lifetime access</span>
+          <div className="relative z-10 mt-4 sm:mt-5 flex flex-wrap gap-2 sm:gap-3 text-[10px] sm:text-xs text-white/70">
+            <span>✓ Free for 15 days</span>
             <span>•</span>
-            <span>One-time payment</span>
+            <span>No credit card</span>
+            <span>•</span>
+            <span>Then $200 lifetime</span>
           </div>
         </div>
 

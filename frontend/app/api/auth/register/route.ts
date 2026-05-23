@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { email, password, name } = parsed.data;
+  const isTrial = body.trial === true;
 
   const existing = await getDb().select().from(usersTable).where(eq(usersTable.email, email));
   if (existing.length > 0) {
@@ -20,15 +21,19 @@ export async function POST(request: NextRequest) {
   }
 
   const passwordHash = hashPassword(password);
+  const trialEndsAt = isTrial ? new Date(Date.now() + 15 * 24 * 60 * 60 * 1000) : null;
+
   const [user] = await getDb().insert(usersTable).values({
     email, passwordHash, name, role: "coach",
-    subscriptionStatus: "inactive",
+    subscriptionStatus: isTrial ? "trialing" : "inactive",
+    trialEndsAt,
   }).returning();
 
   const res = NextResponse.json({
     user: {
       id: user.id, email: user.email, name: user.name,
       role: user.role, subscriptionStatus: user.subscriptionStatus,
+      trialEndsAt: user.trialEndsAt,
       createdAt: user.createdAt,
     },
   }, { status: 201 });
