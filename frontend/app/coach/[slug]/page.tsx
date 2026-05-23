@@ -152,19 +152,18 @@ export default function CoachPublicPage() {
   return (
     <div className="min-h-screen text-foreground" style={customStyles}>
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-[#6d28d9] via-[#1e3a8a] to-[#0f766e] dark:from-[#4a1d96] dark:via-[#1e2a5e] dark:to-[#0a4d44] text-white py-12 sm:py-20 px-4 sm:px-6 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-[#6d28d9] via-[#1e3a8a] to-[#0f766e] dark:from-[#4a1d96] dark:via-[#1e2a5e] dark:to-[#0a4d44] text-white py-16 sm:py-24 px-4 sm:px-6 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_left,_white,_transparent_35%)]" />
-        <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
+        <div className="max-w-3xl mx-auto flex flex-col items-center text-center relative z-10">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tighter uppercase">
             {coach.name}
           </h1>
-          <p className="text-white/80 mt-4 max-w-2xl text-lg font-light leading-relaxed">
+          <p className="text-white/80 mt-4 max-w-2xl text-base sm:text-lg leading-relaxed">
             {coach.welcomeMessage || coach.bio || "Welcome to my customized online coaching platform. Select a plan below to start your transformation today."}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 mt-8">
+          <div className="flex flex-col sm:flex-row gap-3 mt-8 w-full sm:w-auto max-w-xs sm:max-w-none mx-auto">
             <Button
-              size="lg"
-              className="h-12 px-6 text-sm font-bold uppercase tracking-wider bg-white text-[#6d28d9] hover:bg-cyan-300 hover:text-black"
+              className="h-12 px-8 text-sm font-bold uppercase tracking-wider bg-white text-[#6d28d9] hover:bg-cyan-300 hover:text-black w-full sm:w-auto"
               onClick={() => {
                 document.getElementById("plans-section")?.scrollIntoView({ behavior: "smooth" });
               }}
@@ -173,9 +172,8 @@ export default function CoachPublicPage() {
               <ArrowDown className="ml-2 h-4 w-4" />
             </Button>
             <Button
-              size="lg"
               variant="outline"
-              className="h-12 px-6 text-sm font-bold uppercase tracking-wider border-white/30 text-white hover:bg-white/10"
+              className="h-12 px-8 text-sm font-bold uppercase tracking-wider border-white/30 text-white hover:bg-white/10 w-full sm:w-auto"
               onClick={() => {
                 document.getElementById("contact-section")?.scrollIntoView({ behavior: "smooth" });
               }}
@@ -208,14 +206,14 @@ export default function CoachPublicPage() {
 
       {/* About Section */}
       {coach.bio && (
-        <div className="bg-gradient-to-b from-[#1a0a2e] to-[#162447] dark:from-[#0d0d1a] dark:to-[#111827] px-4 sm:px-6 py-12 sm:py-20">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-10">
-              <h2 className="text-2xl font-bold tracking-tight uppercase text-white">About</h2>
-              <div className="w-12 h-1 bg-cyan-400 mx-auto mt-4" />
+        <div className="bg-gradient-to-b from-[#1a0a2e] to-[#162447] dark:from-[#0d0d1a] dark:to-[#111827] px-4 sm:px-6 py-14 sm:py-20">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-xl sm:text-2xl font-bold tracking-tight uppercase text-white">About</h2>
+              <div className="w-10 h-0.5 bg-cyan-400 mx-auto mt-3" />
             </div>
-            <div className="border border-white/10 bg-white/5 backdrop-blur-sm p-8">
-              <p className="text-white/70 leading-relaxed whitespace-pre-line">
+            <div className="border border-white/10 bg-white/5 backdrop-blur-sm p-6 sm:p-8 rounded-lg">
+              <p className="text-white/70 leading-relaxed whitespace-pre-line text-sm sm:text-base">
                 {coach.bio}
               </p>
             </div>
@@ -224,30 +222,30 @@ export default function CoachPublicPage() {
       )}
 
       {/* Plans Section */}
-      <div id="plans-section" className="bg-gradient-to-b from-[#162447] to-[#1a0a2e] dark:from-[#111827] dark:to-[#0d0d1a] py-12 sm:py-20 px-4 sm:px-6">
+      <div id="plans-section" className="bg-gradient-to-b from-[#162447] to-[#1a0a2e] dark:from-[#111827] dark:to-[#0d0d1a] py-14 sm:py-20 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl font-bold tracking-tight uppercase text-white">Coaching Packages</h2>
-            <p className="text-white/60 mt-1">Choose the transformation plan that fits your goals</p>
+          <div className="text-center mb-10">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight uppercase text-white">Coaching Packages</h2>
+            <p className="text-white/60 mt-1 text-sm">Choose the transformation plan that fits your goals</p>
           </div>
 
           {plans.length === 0 ? (
-            <div className="border border-white/10 bg-white/5 p-12 text-center text-white/50">
+            <div className="border border-white/10 bg-white/5 p-10 text-center text-white/50 rounded-lg">
               No active coaching plans available right now. Please check back later!
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {plans.map((plan) => (
-                <Card key={plan.id} className="relative flex flex-col border border-white/10 bg-white/5 backdrop-blur-sm rounded-none hover:border-cyan-400/50 transition-all">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-xl font-bold tracking-tight uppercase text-white">{plan.name}</CardTitle>
-                    <CardDescription className="line-clamp-3 min-h-[4.5rem] mt-2 text-sm leading-relaxed text-white/60">
+                <Card key={plan.id} className="relative flex flex-col border border-white/10 bg-white/5 backdrop-blur-sm rounded-lg hover:border-cyan-400/50 transition-all">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-lg font-bold tracking-tight uppercase text-white">{plan.name}</CardTitle>
+                    <CardDescription className="line-clamp-3 mt-2 text-sm leading-relaxed text-white/60">
                       {plan.description || "Get customized guidance, check-ins, and direct access."}
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="flex-1 flex flex-col pt-0">
-                    <div className="my-6">
-                      <span className="text-4xl font-extrabold tracking-tight text-white">
+                    <div className="my-5">
+                      <span className="text-3xl font-extrabold tracking-tight text-white">
                         {plan.currency} {plan.price.toFixed(0)}
                       </span>
                       <span className="text-white/50 text-sm ml-2">
@@ -255,7 +253,7 @@ export default function CoachPublicPage() {
                       </span>
                     </div>
 
-                    <div className="space-y-3 mb-8 text-sm flex-1">
+                    <div className="space-y-2.5 mb-6 text-sm flex-1">
                       <div className="flex items-start gap-2">
                         <Check className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
                         <span className="text-white/70">Custom Workout & Nutrition Plans</span>
@@ -272,7 +270,7 @@ export default function CoachPublicPage() {
 
                     <Button
                       onClick={() => router.push(`/coach/${slug}/subscribe?planId=${plan.id}`)}
-                      className="w-full h-11 text-sm font-bold uppercase tracking-wider rounded-none bg-cyan-400 text-black hover:bg-cyan-300"
+                      className="w-full h-11 text-sm font-bold uppercase tracking-wider rounded-lg bg-cyan-400 text-black hover:bg-cyan-300"
                     >
                       Subscribe
                     </Button>
@@ -285,20 +283,20 @@ export default function CoachPublicPage() {
       </div>
 
       {/* Contact Section */}
-      <div id="contact-section" className="bg-gradient-to-b from-[#1a0a2e] to-[#0f0518] dark:from-[#0d0d1a] dark:to-[#09090b] px-4 sm:px-6 py-12 sm:py-20">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl font-bold tracking-tight uppercase text-white">Get Started</h2>
-            <p className="text-white/60 mt-1">Send us your details and we&apos;ll get back to you</p>
-            <div className="w-12 h-1 bg-cyan-400 mx-auto mt-4" />
+      <div id="contact-section" className="bg-gradient-to-b from-[#1a0a2e] to-[#0f0518] dark:from-[#0d0d1a] dark:to-[#09090b] px-4 sm:px-6 py-14 sm:py-20">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight uppercase text-white">Get Started</h2>
+            <p className="text-white/60 mt-1 text-sm">Send us your details and we&apos;ll get back to you</p>
+            <div className="w-10 h-0.5 bg-cyan-400 mx-auto mt-3" />
           </div>
 
-          <div className="border border-white/10 bg-white/5 backdrop-blur-sm">
-            <div className="h-1 bg-cyan-400 w-full" />
-            <div className="p-8">
-              <form onSubmit={contactForm.handleSubmit(onContactSubmit)} className="space-y-5">
+          <div className="border border-white/10 bg-white/5 backdrop-blur-sm rounded-lg">
+            <div className="h-1 bg-cyan-400 w-full rounded-t-lg" />
+            <div className="p-6 sm:p-8">
+              <form onSubmit={contactForm.handleSubmit(onContactSubmit)} className="space-y-4">
                 <div>
-                  <label className="text-xs uppercase tracking-wider font-semibold mb-2 block text-white/80">
+                  <label className="text-xs uppercase tracking-wider font-semibold mb-1.5 block text-white/80">
                     Full Name <span className="text-cyan-400">*</span>
                   </label>
                   <Input
@@ -312,7 +310,7 @@ export default function CoachPublicPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs uppercase tracking-wider font-semibold mb-2 block text-white/80">
+                  <label className="text-xs uppercase tracking-wider font-semibold mb-1.5 block text-white/80">
                     Email <span className="text-cyan-400">*</span>
                   </label>
                   <Input
@@ -327,7 +325,7 @@ export default function CoachPublicPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs uppercase tracking-wider font-semibold mb-2 block text-white/80">
+                  <label className="text-xs uppercase tracking-wider font-semibold mb-1.5 block text-white/80">
                     WhatsApp <span className="text-cyan-400">*</span>
                   </label>
                   <Input
@@ -341,12 +339,12 @@ export default function CoachPublicPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs uppercase tracking-wider font-semibold mb-2 block text-white/80">
+                  <label className="text-xs uppercase tracking-wider font-semibold mb-1.5 block text-white/80">
                     Goals <span className="text-cyan-400">*</span>
                   </label>
                   <Textarea
                     placeholder="Tell us about your fitness goals, experience level, and what you're looking for..."
-                    className="min-h-[120px] bg-white/10 border-white/20 text-white placeholder:text-white/40"
+                    className="min-h-[100px] bg-white/10 border-white/20 text-white placeholder:text-white/40"
                     {...contactForm.register("goals")}
                   />
                   {contactForm.formState.errors.goals && (
@@ -356,7 +354,7 @@ export default function CoachPublicPage() {
 
                 <Button
                   type="submit"
-                  className="w-full h-12 text-base font-semibold tracking-wide bg-cyan-400 text-black hover:bg-cyan-300"
+                  className="w-full h-12 text-sm font-bold uppercase tracking-wider bg-cyan-400 text-black hover:bg-cyan-300 rounded-lg"
                   disabled={submitting}
                 >
                   {submitting ? "Sending..." : (
@@ -373,7 +371,7 @@ export default function CoachPublicPage() {
       </div>
 
       {/* Footer */}
-      <div className="bg-[#0f0518] dark:bg-[#09090b] border-t border-white/10 py-6 sm:py-8 text-center text-xs text-white/40">
+      <div className="bg-[#0f0518] dark:bg-[#09090b] border-t border-white/10 py-6 text-center text-xs text-white/40">
         <p>&copy; {new Date().getFullYear()} {coach.name}. Powered by TRAINOVA</p>
       </div>
     </div>
