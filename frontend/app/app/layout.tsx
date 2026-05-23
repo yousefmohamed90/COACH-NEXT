@@ -1,16 +1,18 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/lib/auth-context"
 import { AppSidebar } from "@/components/app-sidebar"
-import { Menu } from "lucide-react"
+import { Menu, Timer, AlertTriangle } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [now, setNow] = useState(Date.now())
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -21,6 +23,21 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setSidebarOpen(false)
   }, [pathname])
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60000)
+    return () => clearInterval(id)
+  }, [])
+
+  const trialDaysLeft = useMemo(() => {
+    if (!user?.trialEndsAt) return null
+    const end = new Date(user.trialEndsAt).getTime()
+    const diff = end - now
+    if (diff <= 0) return 0
+    return Math.ceil(diff / (1000 * 60 * 60 * 24))
+  }, [user?.trialEndsAt, now])
+
+  const showTrialBanner = user?.subscriptionStatus === "trialing" && trialDaysLeft !== null
 
   if (isLoading) {
     return (
@@ -60,6 +77,37 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <span className="font-bold text-lg tracking-tight text-white">TRAINOVA</span>
           </div>
         </div>
+
+        {/* Trial banner */}
+        {showTrialBanner && (
+          <div className={`px-4 py-2.5 flex items-center justify-between gap-3 text-sm ${
+            trialDaysLeft! > 0
+              ? "bg-cyan-500/10 border-b border-cyan-500/20 text-cyan-700 dark:text-cyan-300"
+              : "bg-destructive/10 border-b border-destructive/20 text-destructive"
+          }`}>
+            <div className="flex items-center gap-2 min-w-0">
+              {trialDaysLeft! > 0 ? (
+                <Timer className="h-4 w-4 shrink-0" />
+              ) : (
+                <AlertTriangle className="h-4 w-4 shrink-0" />
+              )}
+              <span className="truncate">
+                {trialDaysLeft! > 0
+                  ? `Free trial: ${trialDaysLeft} day${trialDaysLeft! > 1 ? "s" : ""} remaining`
+                  : "Your free trial has ended. Purchase full access to keep your site."}
+              </span>
+            </div>
+            <Button
+              size="sm"
+              variant={trialDaysLeft! > 0 ? "outline" : "default"}
+              className="shrink-0 text-xs h-8 px-3"
+              onClick={() => router.push("/register")}
+            >
+              {trialDaysLeft! > 0 ? "Buy Now — $200" : "Purchase Access"}
+            </Button>
+          </div>
+        )}
+
         {children}
       </main>
     </div>

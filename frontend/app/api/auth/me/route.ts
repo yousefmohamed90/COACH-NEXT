@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({
     id: user.id, email: user.email, name: user.name,
     role: user.role, subscriptionStatus: user.subscriptionStatus,
+    trialEndsAt: user.trialEndsAt,
     clientId, createdAt: user.createdAt,
   });
 }

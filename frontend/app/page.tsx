@@ -63,8 +63,6 @@ export default function CoachingPlatformDesign() {
           <div className="relative z-10 mt-4 sm:mt-5 flex flex-wrap gap-2 sm:gap-3 text-[10px] sm:text-xs text-white/70">
             <span>✓ Free for 15 days</span>
             <span>•</span>
-            <span>No credit card</span>
-            <span>•</span>
             <span>Then $200 lifetime</span>
           </div>
         </div>
