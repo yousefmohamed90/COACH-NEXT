@@ -3,7 +3,8 @@
 import { useGetDashboardStats } from "@trainova/api-client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Users, CreditCard, DollarSign, Dumbbell, Utensils, Activity, TrendingUp, ArrowRight } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
+import { Users, CreditCard, DollarSign, Dumbbell, Utensils, Activity, TrendingUp, ArrowRight, ExternalLink } from "lucide-react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -22,6 +23,7 @@ type TrendPoint = {
 
 export default function Dashboard() {
   const { data: stats, isLoading: statsLoading } = useGetDashboardStats();
+  const { user } = useAuth();
 
   const [activities, setActivities] = useState<Activity[]>([]);
   const [weightData, setWeightData] = useState<WeightPoint[]>([]);
@@ -46,11 +48,21 @@ export default function Dashboard() {
 
   return (
     <div className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 md:space-y-6">
-      <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-1">
+      <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2">
         <div>
           <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">Your coaching overview</p>
         </div>
+        {user?.slug && (
+          <Link
+            href={`/coach/${user.slug}`}
+            target="_blank"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            View My Site
+          </Link>
+        )}
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 md:gap-4">

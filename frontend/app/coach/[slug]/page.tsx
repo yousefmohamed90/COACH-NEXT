@@ -150,29 +150,21 @@ export default function CoachPublicPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground" style={customStyles}>
+    <div className="min-h-screen text-foreground" style={customStyles}>
       {/* Hero Section */}
-      <div className="border-b border-border py-12 sm:py-20 px-4 sm:px-6 bg-card/50 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 blur-3xl rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/5 blur-3xl rounded-full pointer-events-none" />
+      <div className="bg-gradient-to-br from-[#6d28d9] via-[#1e3a8a] to-[#0f766e] dark:from-[#4a1d96] dark:via-[#1e2a5e] dark:to-[#0a4d44] text-white py-12 sm:py-20 px-4 sm:px-6 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top_left,_white,_transparent_35%)]" />
         <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
-          {coach.logoUrl ? (
-            <img src={coach.logoUrl} alt={coach.name} className="h-20 mb-6 object-contain" />
-          ) : (
-            <div className="w-16 h-16 bg-primary/10 border border-primary/20 text-primary flex items-center justify-center mb-6">
-              <Dumbbell className="h-8 w-8" />
-            </div>
-          )}
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tighter uppercase">
             {coach.name}
           </h1>
-          <p className="text-muted-foreground mt-4 max-w-2xl text-lg font-light leading-relaxed">
+          <p className="text-white/80 mt-4 max-w-2xl text-lg font-light leading-relaxed">
             {coach.welcomeMessage || coach.bio || "Welcome to my customized online coaching platform. Select a plan below to start your transformation today."}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <Button
               size="lg"
-              className="h-12 px-6 text-sm font-bold uppercase tracking-wider"
+              className="h-12 px-6 text-sm font-bold uppercase tracking-wider bg-white text-[#6d28d9] hover:bg-cyan-300 hover:text-black"
               onClick={() => {
                 document.getElementById("plans-section")?.scrollIntoView({ behavior: "smooth" });
               }}
@@ -183,7 +175,7 @@ export default function CoachPublicPage() {
             <Button
               size="lg"
               variant="outline"
-              className="h-12 px-6 text-sm font-bold uppercase tracking-wider"
+              className="h-12 px-6 text-sm font-bold uppercase tracking-wider border-white/30 text-white hover:bg-white/10"
               onClick={() => {
                 document.getElementById("contact-section")?.scrollIntoView({ behavior: "smooth" });
               }}
@@ -199,7 +191,7 @@ export default function CoachPublicPage() {
             return (
               <div className="flex items-center justify-center gap-3 mt-6">
                 {entries.map(([key, url]) => (
-                  <a key={key} href={url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                  <a key={key} href={url} target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-cyan-300 transition-colors">
                     {key === "instagram" && <Instagram className="h-5 w-5" />}
                     {key === "twitter" && <Twitter className="h-5 w-5" />}
                     {key === "youtube" && <Youtube className="h-5 w-5" />}
